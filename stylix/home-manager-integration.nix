@@ -1,183 +1,56 @@
-homeManagerModule:
-{
+homeManagerModule: {
   lib,
   config,
   options,
   ...
-}:
-
-let
+}: let
   copyModules =
     builtins.map
-      (
-        {
-          path,
-          condition ? lib.const true,
-        }:
-        { config, osConfig, ... }:
-        lib.mkIf (condition config) (
-          lib.setAttrByPath path (lib.mkDefault (lib.getAttrFromPath path osConfig))
-        )
-      )
-      [
-        {
-          path = [
-            "stylix"
-            "autoEnable"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "base16Scheme"
-          ];
-          condition = homeConfig: config.stylix.image == homeConfig.stylix.image;
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "name"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "package"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "cursor"
-            "size"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "enable"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "serif"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sansSerif"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "monospace"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "emoji"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sizes"
-            "desktop"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sizes"
-            "applications"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sizes"
-            "terminal"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "fonts"
-            "sizes"
-            "popups"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "image"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "imageScalingMode"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
-            "desktop"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
-            "applications"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
-            "terminal"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "opacity"
-            "popups"
-          ];
-        }
-        {
-          path = [
-            "stylix"
-            "override"
-          ];
-          condition =
-            homeConfig: config.stylix.base16Scheme == homeConfig.stylix.base16Scheme;
-        }
-        {
-          path = [
-            "stylix"
-            "polarity"
-          ];
-        }
-      ];
-
-in
-{
+    (
+      {
+        path,
+        condition ? lib.const true,
+      }: {
+        config,
+        osConfig,
+        ...
+      }:
+        lib.mkIf (condition config)
+        (lib.setAttrByPath path (lib.mkDefault (lib.getAttrFromPath path osConfig)))
+    )
+    [
+      {path = ["stylix" "autoEnable"];}
+      {
+        path = ["stylix" "base16Scheme"];
+        condition = homeConfig: config.stylix.image == homeConfig.stylix.image;
+      }
+      {path = ["stylix" "cursor" "name"];}
+      {path = ["stylix" "cursor" "package"];}
+      {path = ["stylix" "cursor" "size"];}
+      {path = ["stylix" "enable"];}
+      {path = ["stylix" "fonts" "serif"];}
+      {path = ["stylix" "fonts" "sansSerif"];}
+      {path = ["stylix" "fonts" "monospace"];}
+      {path = ["stylix" "fonts" "emoji"];}
+      {path = ["stylix" "fonts" "sizes" "desktop"];}
+      {path = ["stylix" "fonts" "sizes" "applications"];}
+      {path = ["stylix" "fonts" "sizes" "terminal"];}
+      {path = ["stylix" "fonts" "sizes" "popups"];}
+      {path = ["stylix" "image"];}
+      {path = ["stylix" "imageScalingMode"];}
+      {path = ["stylix" "opacity" "desktop"];}
+      {path = ["stylix" "opacity" "applications"];}
+      {path = ["stylix" "opacity" "terminal"];}
+      {path = ["stylix" "opacity" "popups"];}
+      {
+        path = ["stylix" "override"];
+        condition = homeConfig: config.stylix.base16Scheme == homeConfig.stylix.base16Scheme;
+      }
+      {path = ["stylix" "polarity" "force"];}
+      {path = ["stylix" "polarity" "primaryScale" "dark"];}
+      {path = ["stylix" "polarity" "primaryScale" "light"];}
+    ];
+in {
   options.stylix.homeManagerIntegration = {
     followSystem = lib.mkOption {
       description = ''
@@ -206,11 +79,11 @@ in
     };
   };
 
-  config = lib.optionalAttrs (options ? home-manager) (
-    lib.mkIf config.stylix.homeManagerIntegration.autoImport {
+  config =
+    lib.optionalAttrs (options ? home-manager)
+    (lib.mkIf config.stylix.homeManagerIntegration.autoImport {
       home-manager.sharedModules =
-        [ homeManagerModule ]
+        [homeManagerModule]
         ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
-    }
-  );
+    });
 }

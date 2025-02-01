@@ -1,49 +1,63 @@
-{ palette-generator, base16 }:
 {
+  palette-generator,
+  base16,
+}: {
   pkgs,
   lib,
   config,
   ...
-}:
-
-let
+}: let
   cfg = config.stylix;
 
-  paletteJSON =
-    let
-      generatedJSON = pkgs.runCommand "palette.json" { } ''
-        ${palette-generator}/bin/palette-generator \
-          "${cfg.polarity}" \
-          ${lib.escapeShellArg "${cfg.image}"} \
-          "$out"
-      '';
-      palette = lib.importJSON generatedJSON;
-      scheme = base16.mkSchemeAttrs palette;
-      json = scheme {
-        template = ./palette.json.mustache;
-        extension = ".json";
-      };
-    in
+  paletteJSON = let
+    generatedJSON = pkgs.runCommand "palette.json" {} ''
+      ${palette-generator}/bin/palette-generator \
+        "${cfg.polarity.force}" \
+        "${toString cfg.polarity.primaryScale.dark}" \
+        "${toString cfg.polarity.primaryScale.light}" \
+        ${lib.escapeShellArg "${cfg.image}"} \
+        "$out"
+    '';
+    palette = lib.importJSON generatedJSON;
+    scheme = base16.mkSchemeAttrs palette;
+    json = scheme {
+      template = ./palette.json.mustache;
+      extension = ".json";
+    };
+  in
     json;
   generatedScheme = lib.importJSON paletteJSON;
-
-in
-{
+in {
   options.stylix = {
-    polarity = lib.mkOption {
-      type = lib.types.enum [
-        "either"
-        "light"
-        "dark"
-      ];
-      default = "either";
-      description = ''
-        Use this option to force a light or dark theme.
+    polarity = {
+      force = lib.mkOption {
+        type = lib.types.enum ["either" "light" "dark"];
+        default = "either";
+        description = ''
+          Use this option to force a light or dark theme.
 
-        By default we will select whichever is ranked better by the genetic
-        algorithm. This aims to get good contrast between the foreground and
-        background, as well as some variety in the highlight colours.
-      '';
+          By default we will select whichever is ranked better by the genetic
+          algorithm. This aims to get good contrast between the foreground and
+          background, as well as some variety in the highlight colours.
+        '';
+      };
+
+      primaryScale = {
+        dark = lib.mkOption {
+          type = lib.types.float;
+          default = 1.0;
+          description = ''
+            Use this option to scale color values for the generated light theme.
+          '';
+        };
+        light = lib.mkOption {
+          type = lib.types.float;
+          default = 1.0;
+          description = ''
+            Use this option to scale color values for the generated light theme.
+          '';
+        };
+      };
     };
 
     image = lib.mkOption {
@@ -57,31 +71,13 @@ in
     };
 
     imageScalingMode = lib.mkOption {
-      type = lib.types.enum [
-        "stretch"
-        "fill"
-        "fit"
-        "center"
-        "tile"
-      ];
+      type = lib.types.enum ["stretch" "fill" "fit" "center" "tile"];
       default = "fill";
       description = ''
-        Scaling mode for the wallpaper image.
+        Wallpaper scaling mode;
 
-        `stretch`
-        : Stretch the image to cover the screen.
-
-        `fill`
-        : Scale the image to fill the screen, potentially cropping it.
-
-        `fit`
-        : Scale the image to fit the screen without being cropped.
-
-        `center`
-        : Center the image without resizing it.
-
-        `tile`
-        : Tile the image to cover the screen.
+        This is the scaling mode your wallpaper image will use assuming it
+        doesnt fix your monitor perfectly
       '';
     };
 
@@ -116,13 +112,7 @@ in
 
         This can be a path to a file, a string of YAML, or an attribute set.
       '';
-      type =
-        with lib.types;
-        oneOf [
-          path
-          lines
-          attrs
-        ];
+      type = with lib.types; oneOf [path lines attrs];
       default = generatedScheme;
       defaultText = lib.literalMD ''
         The colors used in the theming.
@@ -141,7 +131,7 @@ in
         to override.
       '';
       type = lib.types.attrs;
-      default = { };
+      default = {};
     };
   };
 
