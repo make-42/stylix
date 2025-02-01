@@ -1,40 +1,49 @@
-{ pkgs, config, lib, ... }:
-
-with config.stylix.fonts;
-with config.lib.stylix.colors;
-
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
-  formatValue = value:
-    if builtins.isBool value
-    then if value then "true" else "false"
-    else builtins.toString value;
+  cfg = config.stylix.targets.kde;
 
-  formatSection = path: data:
+  inherit (config.lib.stylix)
+    colors
+    mkEnableTarget
+    ;
+
+  formatValue =
+    value:
+    if lib.isBool value then if value then "true" else "false" else toString value;
+
+  formatSection =
+    path: data:
     let
       header = lib.concatStrings (map (p: "[${p}]") path);
       formatChild = name: formatLines (path ++ [ name ]);
       children = lib.mapAttrsToList formatChild data;
-      partitioned = lib.partition builtins.isString children;
+      partitioned = lib.partition lib.isString children;
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-      lib.optional (directChildren != []) header ++
-      directChildren ++
-      lib.flatten indirectChildren;
+    lib.optional (directChildren != [ ]) header
+    ++ directChildren
+    ++ lib.flatten indirectChildren;
 
-  formatLines = path: data:
-    if builtins.isAttrs data
-    then
-      if data?_immutable
-      then
-        if builtins.isAttrs data.value
-        then formatSection (path ++ [ "$i" ]) data.value
-        else "${lib.last path}[$i]=${formatValue data.value}"
-      else formatSection path data
-    else "${lib.last path}=${formatValue data}";
+  formatLines =
+    path: data:
+    if lib.isAttrs data then
+      if data ? _immutable then
+        if lib.isAttrs data.value then
+          formatSection (path ++ [ "$i" ]) data.value
+        else
+          "${lib.last path}[$i]=${formatValue data.value}"
+      else
+        formatSection path data
+    else
+      "${lib.last path}=${formatValue data}";
 
-  formatConfig = data:
-    lib.concatStringsSep "\n" (formatLines [] data);
+  formatConfig = data: lib.concatStringsSep "\n" (formatLines [ ] data);
 
   # Marking a setting as immutable should prevent it being overwritten
   # through the system settings menu.
@@ -46,9 +55,9 @@ let
   # PascalCase is the standard naming for color scheme files. Schemes named
   # in kebab-case will load when selected manually, but don't work with a
   # look and feel package.
-  colorschemeSlug = lib.concatStrings
-    (builtins.filter builtins.isString
-      (builtins.split "[^a-zA-Z]" scheme));
+  colorschemeSlug = lib.concatStrings (
+    lib.filter lib.isString (builtins.split "[^a-zA-Z]" colors.scheme)
+  );
 
   colorEffect = {
     ColorEffect = 0;
@@ -59,52 +68,76 @@ let
     IntensityAmount = 0;
   };
 
-  colors = {
-    BackgroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-    BackgroundAlternate = "${base01-rgb-r},${base01-rgb-g},${base01-rgb-b}";
-    DecorationFocus = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    DecorationHover = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    ForegroundNormal = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundActive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundInactive = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundLink = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundVisited = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-    ForegroundNegative = "${base08-rgb-r},${base08-rgb-g},${base08-rgb-b}";
-    ForegroundNeutral = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-    ForegroundPositive = "${base0B-rgb-r},${base0B-rgb-g},${base0B-rgb-b}";
+  mkColorTriple =
+    name:
+    lib.concatStringsSep "," (
+      map (color: colors."${name}-rgb-${color}") [
+        "r"
+        "g"
+        "b"
+      ]
+    );
+
+  mkColorMapping =
+    num:
+    let
+      hex = "base0${lib.toHexString num}";
+    in
+    {
+      name = hex;
+      value = mkColorTriple hex;
+    };
+
+  colors' = lib.listToAttrs (map mkColorMapping (lib.range 0 15));
+
+  kdecolors = with colors'; {
+    BackgroundNormal = base00;
+    BackgroundAlternate = base01;
+    DecorationFocus = base0D;
+    DecorationHover = base0D;
+    ForegroundNormal = base05;
+    ForegroundActive = base05;
+    ForegroundInactive = base05;
+    ForegroundLink = base05;
+    ForegroundVisited = base05;
+    ForegroundNegative = base08;
+    ForegroundNeutral = base0D;
+    ForegroundPositive = base0B;
   };
 
   colorscheme = {
     General = {
       ColorScheme = colorschemeSlug;
-      Name = scheme;
+      Name = colors.scheme;
     };
 
     "ColorEffects:Disabled" = colorEffect;
     "ColorEffects:Inactive" = colorEffect;
 
-    "Colors:Window" = colors;
-    "Colors:View" = colors;
-    "Colors:Button" = colors;
-    "Colors:Tooltip" = colors;
-    "Colors:Complementary" = colors;
-    "Colors:Selection" = colors // {
-      BackgroundNormal = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-      BackgroundAlternate = "${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}";
-      ForegroundNormal = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundActive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundInactive = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundLink = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      ForegroundVisited = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-    };
+    "Colors:Window" = kdecolors;
+    "Colors:View" = kdecolors;
+    "Colors:Button" = kdecolors;
+    "Colors:Tooltip" = kdecolors;
+    "Colors:Complementary" = kdecolors;
+    "Colors:Selection" =
+      kdecolors
+      // (with colors'; {
+        BackgroundNormal = base0D;
+        BackgroundAlternate = base0D;
+        ForegroundNormal = base00;
+        ForegroundActive = base00;
+        ForegroundInactive = base00;
+        ForegroundLink = base00;
+        ForegroundVisited = base00;
+      });
 
-    WM = {
-      activeBlend = "${base0A-rgb-r},${base0A-rgb-g},${base0A-rgb-b}";
-      activeBackground = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      activeForeground = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
-      inactiveBlend = "${base03-rgb-r},${base03-rgb-g},${base03-rgb-b}";
-      inactiveBackground = "${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}";
-      inactiveForeground = "${base05-rgb-r},${base05-rgb-g},${base05-rgb-b}";
+    WM = with colors'; {
+      activeBlend = base0A;
+      activeBackground = base00;
+      activeForeground = base05;
+      inactiveBlend = base03;
+      inactiveBackground = base00;
+      inactiveForeground = base05;
     };
   };
 
@@ -123,10 +156,11 @@ let
       ServiceTypes = [ "Plasma/LookAndFeel" ];
       Website = "https://github.com/danth/stylix";
     };
+    KPackageStructure = "Plasma/LookAndFeel";
   };
 
   lookAndFeelDefaults = {
-    kwinrc."org.kde.kdecoration2".library = "org.kde.breeze";
+    kwinrc."org.kde.kdecoration2".library = cfg.decorations;
     plasmarc.Theme.name = "default";
 
     kdeglobals = {
@@ -140,41 +174,44 @@ let
 
   # Contains a wallpaper package, a colorscheme file, and a look and feel
   # package which depends on both.
-  themePackage = pkgs.runCommandLocal "stylix-kde-theme" {
-    colorscheme = formatConfig colorscheme;
-    wallpaperMetadata = builtins.toJSON wallpaperMetadata;
-    wallpaperImage = config.stylix.image;
-    lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
-    lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
-  } ''
-    write_text() {
-      mkdir --parents "$(dirname "$2")"
-      printf '%s\n' "$1" >"$2"
-    }
+  themePackage =
+    pkgs.runCommandLocal "stylix-kde-theme"
+      {
+        colorscheme = formatConfig colorscheme;
+        wallpaperMetadata = builtins.toJSON wallpaperMetadata;
+        wallpaperImage = config.stylix.image;
+        lookAndFeelMetadata = builtins.toJSON lookAndFeelMetadata;
+        lookAndFeelDefaults = formatConfig lookAndFeelDefaults;
+      }
+      ''
+        write_text() {
+          mkdir --parents "$(dirname "$2")"
+          printf '%s\n' "$1" >"$2"
+        }
 
-    PATH="${pkgs.imagemagick}/bin:$PATH"
+        PATH="${pkgs.imagemagick}/bin:$PATH"
 
-    wallpaper="$out/share/wallpapers/stylix"
-    look_and_feel="$out/share/plasma/look-and-feel/stylix"
+        wallpaper="$out/share/wallpapers/stylix"
+        look_and_feel="$out/share/plasma/look-and-feel/stylix"
 
-    mkdir --parents "$wallpaper/contents/images"
+        mkdir --parents "$wallpaper/contents/images"
 
-    magick \
-      "$wallpaperImage" \
-      -thumbnail 400x250 \
-      "$wallpaper/contents/screenshot.png"
+        magick \
+          "$wallpaperImage" \
+          -thumbnail 400x250 \
+          "$wallpaper/contents/screenshot.png"
 
-    dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
-    magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
+        dimensions="$(identify -ping -format '%wx%h' "$wallpaperImage")"
+        magick "$wallpaperImage" "$wallpaper/contents/images/$dimensions.png"
 
-    write_text \
-      "$colorscheme" \
-      "$out/share/color-schemes/${colorschemeSlug}.colors"
+        write_text \
+          "$colorscheme" \
+          "$out/share/color-schemes/${colorschemeSlug}.colors"
 
-    write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
-    write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
-    write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
-  '';
+        write_text "$wallpaperMetadata" "$wallpaper/metadata.json"
+        write_text "$lookAndFeelMetadata" "$look_and_feel/metadata.json"
+        write_text "$lookAndFeelDefaults" "$look_and_feel/contents/defaults"
+      '';
 
   # The cursor theme can be configured through a look and feel package,
   # however its size cannot.
@@ -197,7 +234,7 @@ let
   kdeglobals = {
     KDE.LookAndFeelPackage = makeImmutable "stylix";
 
-    General = rec {
+    General = with config.stylix.fonts; rec {
       font = makeImmutable "${sansSerif.name},${toString sizes.applications},-1,5,50,0,0,0,0,0";
       fixed = makeImmutable "${monospace.name},${toString sizes.terminal},-1,5,50,0,0,0,0,0";
       desktopFont = makeImmutable "${sansSerif.name},${toString sizes.desktop},-1,5,50,0,0,0,0,0";
@@ -208,64 +245,103 @@ let
     };
   };
 
-  configPackage = pkgs.runCommandLocal "stylix-kde-config" {
-    kcminputrc = formatConfig kcminputrc;
-    kded5rc = formatConfig kded5rc;
-    kdeglobals = formatConfig kdeglobals;
-  } ''
-    mkdir "$out"
-
-    printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
-    printf '%s\n' "$kded5rc" >"$out/kded5rc"
-    printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
-  '';
-
-in {
-  options.stylix.targets.kde.enable =
-    config.lib.stylix.mkEnableTarget "KDE" true;
-
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.kde.enable && pkgs.stdenv.hostPlatform.isLinux) {
-    home.packages = [ themePackage ];
-    xdg.systemDirs.config = [ "${configPackage}" ];
-
-    # plasma-apply-wallpaperimage is necessary to change the wallpaper
-    # after the first login.
-    #
-    # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
-    # would still be applied without it if you logged out and back in.
-    #
-    # Home Manager clears $PATH before running the activation script, but we
-    # want to avoid installing these tools explicitly because that would pull
-    # in large dependencies for people who aren't actually using KDE.
-    # The workaround used is to assume a list of common paths where the tools
-    # might be installed, and look there. The ideal solution would require
-    # changes to KDE to make it possible to update the wallpaper through
-    # config files alone.
-    home.activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      global_path() {
-        for directory in /run/current-system/sw/bin /usr/bin /bin; do
-          if [[ -f "$directory/$1" ]]; then
-            printf '%s\n' "$directory/$1"
-            return 0
-          fi
-        done
-
-        return 1
+  configPackage =
+    pkgs.runCommandLocal "stylix-kde-config"
+      {
+        kcminputrc = formatConfig kcminputrc;
+        kded5rc = formatConfig kded5rc;
+        kdeglobals = formatConfig kdeglobals;
       }
+      ''
+        mkdir "$out"
 
-      if wallpaper_image="$(global_path plasma-apply-wallpaperimage)"; then
-        "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
-      else
-        verboseEcho \
-          "plasma-apply-wallpaperimage: command not found"
-      fi
+        printf '%s\n' "$kcminputrc" >"$out/kcminputrc"
+        printf '%s\n' "$kded5rc" >"$out/kded5rc"
+        printf '%s\n' "$kdeglobals" >"$out/kdeglobals"
+      '';
 
-      if look_and_feel="$(global_path plasma-apply-lookandfeel)"; then
-        "$look_and_feel" --apply stylix
-      else
-        verboseEcho \
-          "Skipping plasma-apply-lookandfeel: command not found"
-      fi
-    '';
+  # plasma-apply-wallpaperimage is necessary to change the wallpaper
+  # after the first login.
+  #
+  # plasma-apply-lookandfeel is only here to trigger a hot reload, the theme
+  # would still be applied without it if you logged out and back in.
+  #
+  # Home Manager clears $PATH before running the activation script, but we
+  # want to avoid installing these tools explicitly because that would pull
+  # in large dependencies for people who aren't actually using KDE.
+  # The workaround used is to assume a list of common paths where the tools
+  # might be installed, and look there. The ideal solution would require
+  # changes to KDE to make it possible to update the wallpaper through
+  # config files alone.
+  activator' = pkgs.writeShellScriptBin "stylix-activate-kde" ''
+    set -eu
+    get_exe() {
+      for directory in /run/current-system/sw/bin /usr/bin /bin; do
+        if [[ -f "$directory/$1" ]]; then
+          printf '%s\n' "$directory/$1"
+          return 0
+        fi
+      done
+      echo "Skipping `$1`: command not found"
+      return 1
+    }
+
+    if wallpaper_image="$(get_exe plasma-apply-wallpaperimage)"; then
+      "$wallpaper_image" "${themePackage}/share/wallpapers/stylix"
+    fi
+
+    if look_and_feel="$(get_exe plasma-apply-lookandfeel)"; then
+      "$look_and_feel" --apply stylix
+    fi
+  '';
+  activator = lib.getExe activator';
+in
+{
+  options.stylix.targets.kde = {
+    enable = mkEnableTarget "KDE" true;
+
+    decorations = lib.mkOption {
+      type = lib.types.str;
+      default = "org.kde.breeze";
+      description = ''
+        The library for the window decorations theme.
+
+        Decorations other than default `org.kde.breeze` may not be compatible
+        with stylix.
+
+        To list all available decorations, see the `library` key in the
+        `org.kde.kdecoration2` section of `$HOME/.config/kwinrc` after
+        imperatively applying the window decoration via the System Settings app.
+      '';
+    };
   };
+
+  config =
+    lib.mkIf
+      (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
+      {
+        home = {
+          packages = [ themePackage ];
+
+          # This activation entry will run the theme activator when the homeConfiguration is activated
+          activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            ${activator} || verboseEcho \
+              "Stylix KDE theme setting failed. This only works in a running Plasma session."
+          '';
+        };
+
+        xdg = {
+          systemDirs.config = [ "${configPackage}" ];
+
+          # This desktop entry will run the theme activator when a new Plasma session is started
+          # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
+          configFile."autostart/stylix-activator.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Exec=${activator}
+            Name=Stylix Activator
+            X-KDE-AutostartScript=true
+          '';
+        };
+      };
 }
