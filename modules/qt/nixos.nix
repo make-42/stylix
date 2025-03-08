@@ -52,10 +52,7 @@ in
           enable = true;
           style = recommendedStyle."${config.qt.platformTheme}" or null;
           platformTheme =
-            if config.stylix.targets.qt.platform == "qtct" then
-              "qt5ct"
-            else
-              config.stylix.targets.qt.platform;
+            if config.stylix.targets.qt.platform == "qtct" then "qt5ct" else config.stylix.targets.qt.platform;
         };
       };
     in
