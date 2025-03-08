@@ -130,7 +130,6 @@
           git-hooks = inputs.git-hooks.lib.${system}.run {
             hooks = {
               deadnix.enable = true;
-              hlint.enable = true;
 
               nixfmt-rfc-style = {
                 enable = true;
@@ -138,7 +137,6 @@
               };
 
               statix.enable = true;
-              stylish-haskell.enable = true;
               typos.enable = true;
               yamllint.enable = true;
             };
