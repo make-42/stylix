@@ -209,7 +209,7 @@
     )
     // {
       nixosModules.stylix =
-        { pkgs, ... }@args:
+        { _pkgs ? pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/nixos inputs)
@@ -223,7 +223,7 @@
         };
 
       homeManagerModules.stylix =
-        { pkgs, ... }@args:
+        { _pkgs ? pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/hm inputs)
@@ -236,7 +236,7 @@
         };
 
       darwinModules.stylix =
-        { pkgs, ... }@args:
+        { _pkgs ? pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/darwin inputs)
