@@ -3,7 +3,8 @@
 with config.lib.stylix.colors.withHashtag;
 
 {
-  options.stylix.targets.nushell.enable = config.lib.stylix.mkEnableTarget "Nushell" true;
+  options.stylix.targets.nushell.enable =
+    config.lib.stylix.mkEnableTarget "Nushell" true;
 
   # Adapted from https://www.nushell.sh/book/coloring_and_theming.html#theming
   config.programs.nushell.extraConfig =

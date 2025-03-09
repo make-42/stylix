@@ -14,10 +14,13 @@ let
     in
     mkLiteral "rgba ( ${r}, ${g}, ${b}, ${opacity} % )";
   mkRgb = mkRgba "100";
-  rofiOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.popups * 100));
+  rofiOpacity = builtins.toString (
+    builtins.ceil (config.stylix.opacity.popups * 100)
+  );
 in
 {
-  options.stylix.targets.rofi.enable = config.lib.stylix.mkEnableTarget "Rofi" true;
+  options.stylix.targets.rofi.enable =
+    config.lib.stylix.mkEnableTarget "Rofi" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.rofi.enable) {
     programs.rofi = {

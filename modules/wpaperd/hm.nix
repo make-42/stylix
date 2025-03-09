@@ -4,7 +4,9 @@ let
 in
 {
   options.stylix.targets.wpaperd = {
-    enable = config.lib.stylix.mkEnableTarget "wpaperd" (config.stylix.image != null);
+    enable = config.lib.stylix.mkEnableTarget "wpaperd" (
+      config.stylix.image != null
+    );
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) (
@@ -24,7 +26,8 @@ in
         if builtins.hasAttr imageScalingMode modeMap then
           { mode = modeMap.${imageScalingMode}; }
         else
-          lib.info "stylix: wpaperd: unsupported image scaling mode: ${imageScalingMode}" { };
+          lib.info "stylix: wpaperd: unsupported image scaling mode: ${imageScalingMode}"
+            { };
     in
     {
       services.wpaperd.settings.any = {

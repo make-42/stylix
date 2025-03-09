@@ -4,7 +4,9 @@ let
 in
 {
   options.stylix.targets.hyprpaper = {
-    enable = config.lib.stylix.mkEnableTarget "Hyprpaper" (config.stylix.image != null);
+    enable = config.lib.stylix.mkEnableTarget "Hyprpaper" (
+      config.stylix.image != null
+    );
   };
 
   config = lib.mkIf (config.stylix.enable && cfg.enable) {

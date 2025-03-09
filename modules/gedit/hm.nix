@@ -8,7 +8,8 @@ let
 
 in
 {
-  options.stylix.targets.gedit.enable = config.lib.stylix.mkEnableTarget "GEdit" true;
+  options.stylix.targets.gedit.enable =
+    config.lib.stylix.mkEnableTarget "GEdit" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gedit.enable) {
     xdg.dataFile = {

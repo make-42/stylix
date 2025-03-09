@@ -7,11 +7,16 @@
 }:
 
 {
-  options.stylix.targets.spicetify.enable = config.lib.stylix.mkEnableTarget "Spicetify" true;
+  options.stylix.targets.spicetify.enable =
+    config.lib.stylix.mkEnableTarget "Spicetify" true;
 
   config =
     lib.mkIf
-      (config.stylix.enable && config.stylix.targets.spicetify.enable && (config.programs ? spicetify))
+      (
+        config.stylix.enable
+        && config.stylix.targets.spicetify.enable
+        && (config.programs ? spicetify)
+      )
       (
         lib.optionalAttrs (builtins.hasAttr "spicetify" options.programs) {
           programs.spicetify = {

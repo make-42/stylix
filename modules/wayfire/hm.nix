@@ -48,19 +48,21 @@ in
         };
       };
 
-      wayland.windowManager.wayfire.wf-shell.settings = lib.mkIf wayfireConfig.wf-shell.enable {
-        background.image = lib.mkIf cfg.useWallpaper "${wayfireBackground}";
-        background.fill_mode =
-          if config.stylix.imageScalingMode == "stretch" then
-            "stretch"
-          else if config.stylix.imageScalingMode == "fit" then
-            "preserve_aspect"
-          else
-            "fill_and_crop";
+      wayland.windowManager.wayfire.wf-shell.settings =
+        lib.mkIf wayfireConfig.wf-shell.enable
+          {
+            background.image = lib.mkIf cfg.useWallpaper "${wayfireBackground}";
+            background.fill_mode =
+              if config.stylix.imageScalingMode == "stretch" then
+                "stretch"
+              else if config.stylix.imageScalingMode == "fit" then
+                "preserve_aspect"
+              else
+                "fill_and_crop";
 
-        panel.background_color = rgb colors.base01;
-        panel.menu_icon = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
-      };
+            panel.background_color = rgb colors.base01;
+            panel.menu_icon = "${pkgs.nixos-icons}/share/icons/hicolor/256x256/apps/nix-snowflake.png";
+          };
     }
   );
 }

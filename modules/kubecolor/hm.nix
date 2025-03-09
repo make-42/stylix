@@ -1,6 +1,7 @@
 { config, lib, ... }:
 {
-  options.stylix.targets.kubecolor.enable = config.lib.stylix.mkEnableTarget "kubecolor" true;
+  options.stylix.targets.kubecolor.enable =
+    config.lib.stylix.mkEnableTarget "kubecolor" true;
 
   config = lib.mkIf config.stylix.targets.kubecolor.enable {
     programs.kubecolor.settings = {

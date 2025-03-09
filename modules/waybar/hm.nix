@@ -55,7 +55,9 @@ in
       + lib.optionalString cfg.addCss (
         ''
           window#waybar, tooltip {
-              background: alpha(@base00, ${with config.stylix.opacity; builtins.toString desktop});
+              background: alpha(@base00, ${
+                with config.stylix.opacity; builtins.toString desktop
+              });
               color: @base05;
           }
 
@@ -64,9 +66,24 @@ in
           }
         ''
         + (builtins.readFile ./base.css)
-        + (if cfg.enableLeftBackColors then (import ./colors.nix "left") else colorlessModules "left")
-        + (if cfg.enableCenterBackColors then (import ./colors.nix "center") else colorlessModules "center")
-        + (if cfg.enableRightBackColors then (import ./colors.nix "right") else colorlessModules "right")
+        + (
+          if cfg.enableLeftBackColors then
+            (import ./colors.nix "left")
+          else
+            colorlessModules "left"
+        )
+        + (
+          if cfg.enableCenterBackColors then
+            (import ./colors.nix "center")
+          else
+            colorlessModules "center"
+        )
+        + (
+          if cfg.enableRightBackColors then
+            (import ./colors.nix "right")
+          else
+            colorlessModules "right"
+        )
       );
   };
 }

@@ -164,7 +164,8 @@ let
             "stylix"
             "override"
           ];
-          condition = homeConfig: config.stylix.base16Scheme == homeConfig.stylix.base16Scheme;
+          condition =
+            homeConfig: config.stylix.base16Scheme == homeConfig.stylix.base16Scheme;
         }
         {
           path = [
@@ -253,9 +254,11 @@ in
 
   config = lib.optionalAttrs (options ? home-manager) (
     lib.mkIf config.stylix.homeManagerIntegration.autoImport {
-      home-manager.sharedModules = [
-        config.stylix.homeManagerIntegration.module
-      ] ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
+      home-manager.sharedModules =
+        [
+          config.stylix.homeManagerIntegration.module
+        ]
+        ++ (lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules);
     }
   );
 }

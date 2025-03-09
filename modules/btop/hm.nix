@@ -4,10 +4,16 @@ let
   colors = config.lib.stylix.colors.withHashtag;
 in
 {
-  options.stylix.targets.btop.enable = config.lib.stylix.mkEnableTarget "btop" true;
+  options.stylix.targets.btop.enable =
+    config.lib.stylix.mkEnableTarget "btop" true;
 
   config =
-    lib.mkIf (config.stylix.enable && config.stylix.targets.btop.enable && config.programs.btop.enable)
+    lib.mkIf
+      (
+        config.stylix.enable
+        && config.stylix.targets.btop.enable
+        && config.programs.btop.enable
+      )
       {
 
         programs.btop.settings = {

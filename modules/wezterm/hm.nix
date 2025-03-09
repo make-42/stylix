@@ -4,11 +4,16 @@ let
   colors = config.lib.stylix.colors.withHashtag;
 in
 {
-  options.stylix.targets.wezterm.enable = config.lib.stylix.mkEnableTarget "wezterm" true;
+  options.stylix.targets.wezterm.enable =
+    config.lib.stylix.mkEnableTarget "wezterm" true;
 
   config =
     lib.mkIf
-      (config.stylix.enable && config.stylix.targets.wezterm.enable && config.programs.wezterm.enable)
+      (
+        config.stylix.enable
+        && config.stylix.targets.wezterm.enable
+        && config.programs.wezterm.enable
+      )
       {
 
         programs.wezterm.colorSchemes.stylix = with colors; {

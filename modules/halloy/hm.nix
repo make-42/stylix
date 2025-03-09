@@ -7,9 +7,12 @@ let
   };
 in
 {
-  options.stylix.targets.halloy.enable = config.lib.stylix.mkEnableTarget "Halloy" true;
+  options.stylix.targets.halloy.enable =
+    config.lib.stylix.mkEnableTarget "Halloy" true;
 
-  config = lib.mkIf (config.stylix.enable && config.stylix.targets.halloy.enable) {
-    xdg.configFile."halloy/themes/Stylix.toml".source = themeFile;
-  };
+  config =
+    lib.mkIf (config.stylix.enable && config.stylix.targets.halloy.enable)
+      {
+        xdg.configFile."halloy/themes/Stylix.toml".source = themeFile;
+      };
 }

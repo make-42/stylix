@@ -53,7 +53,9 @@ in
   config =
     lib.mkIf
       (
-        config.stylix.enable && config.stylix.targets.swaylock.enable && pkgs.stdenv.hostPlatform.isLinux
+        config.stylix.enable
+        && config.stylix.targets.swaylock.enable
+        && pkgs.stdenv.hostPlatform.isLinux
         # Adding `&& config.programs.swaylock.enable` here may lead to infinite
         # recursion, due to the default value depending on `settings != {}`
         # when the state version is older than 23.05 [1], and the content of

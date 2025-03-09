@@ -9,11 +9,14 @@ with config.lib.stylix.colors.withHashtag;
 with config.stylix.fonts;
 
 let
-  emacsOpacity = builtins.toString (builtins.ceil (config.stylix.opacity.applications * 100));
+  emacsOpacity = builtins.toString (
+    builtins.ceil (config.stylix.opacity.applications * 100)
+  );
   emacsSize = builtins.toString (sizes.terminal * 1.0);
 in
 {
-  options.stylix.targets.emacs.enable = config.lib.stylix.mkEnableTarget "Emacs" true;
+  options.stylix.targets.emacs.enable =
+    config.lib.stylix.mkEnableTarget "Emacs" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.emacs.enable) {
     programs.emacs = {

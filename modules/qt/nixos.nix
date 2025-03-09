@@ -8,7 +8,11 @@
 let
 
   recommendedStyle = {
-    gnome = if config.stylix.themeGeneration.polarity == "dark" then "adwaita-dark" else "adwaita";
+    gnome =
+      if config.stylix.themeGeneration.polarity == "dark" then
+        "adwaita-dark"
+      else
+        "adwaita";
     kde = "breeze";
     qtct = "kvantum";
   };
@@ -52,7 +56,10 @@ in
           enable = true;
           style = recommendedStyle."${config.qt.platformTheme}" or null;
           platformTheme =
-            if config.stylix.targets.qt.platform == "qtct" then "qt5ct" else config.stylix.targets.qt.platform;
+            if config.stylix.targets.qt.platform == "qtct" then
+              "qt5ct"
+            else
+              config.stylix.targets.qt.platform;
         };
       };
     in

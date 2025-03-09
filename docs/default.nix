@@ -68,7 +68,9 @@ let
     makeOptionsDoc {
       inherit configuration;
       pathFilter =
-        path: lib.hasPrefix "${inputs.self}/" path && !lib.hasPrefix "${inputs.self}/modules/" path;
+        path:
+        lib.hasPrefix "${inputs.self}/" path
+        && !lib.hasPrefix "${inputs.self}/modules/" path;
     };
 
   # Returns an attribute set of module names and their corresponding option
