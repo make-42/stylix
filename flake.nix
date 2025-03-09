@@ -209,12 +209,13 @@
     )
     // {
       nixosModules.stylix =
-        { pkgs, ... }@args:
+        { ... }@args:
         {
           imports = [
             (import ./stylix/nixos inputs)
             {
               stylix = {
+                inherit inputs;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
@@ -223,12 +224,13 @@
         };
 
       homeManagerModules.stylix =
-        { pkgs, ... }@args:
+        { ... }@args:
         {
           imports = [
             (import ./stylix/hm inputs)
             {
               stylix = {
+                inherit inputs;
                 base16 = base16.lib args;
               };
             }
@@ -236,12 +238,13 @@
         };
 
       darwinModules.stylix =
-        { pkgs, ... }@args:
+        { ... }@args:
         {
           imports = [
             (import ./stylix/darwin inputs)
             {
               stylix = {
+                inherit inputs;
                 base16 = base16.lib args;
                 homeManagerIntegration.module = self.homeManagerModules.stylix;
               };
