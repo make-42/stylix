@@ -11,8 +11,7 @@ let
   aviOpacity = toString config.stylix.opacity.popups;
 in
 {
-  options.stylix.targets.avizo.enable =
-    config.lib.stylix.mkEnableTarget "Avizo" true;
+  options.stylix.targets.avizo.enable = config.lib.stylix.mkEnableTarget "Avizo" true;
 
   # Referenced https://github.com/stacyharper/base16-mako
   config = lib.optionalAttrs (options.services ? avizo) (

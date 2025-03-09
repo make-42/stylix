@@ -19,16 +19,11 @@ let
 
 in
 {
-  options.stylix.targets.helix.enable =
-    config.lib.stylix.mkEnableTarget "Helix" true;
+  options.stylix.targets.helix.enable = config.lib.stylix.mkEnableTarget "Helix" true;
 
   config =
     lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.helix.enable
-        && config.programs.helix.enable
-      )
+      (config.stylix.enable && config.stylix.targets.helix.enable && config.programs.helix.enable)
       {
         programs.helix.settings.theme = "stylix";
 

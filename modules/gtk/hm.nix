@@ -64,17 +64,15 @@ in
         lib.mkMerge [
           {
             # Flatpak apps apparently don't consume the CSS config. This workaround appends it to the theme directly.
-            home.file.".themes/${config.gtk.theme.name}".source =
-              pkgs.stdenvNoCC.mkDerivation
-                {
-                  name = "flattenedGtkTheme";
-                  src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
+            home.file.".themes/${config.gtk.theme.name}".source = pkgs.stdenvNoCC.mkDerivation {
+              name = "flattenedGtkTheme";
+              src = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}";
 
-                  installPhase = ''
-                    cp --recursive . $out
-                    cat ${finalCss} | tee --append $out/gtk-{3,4}.0/gtk.css
-                  '';
-                };
+              installPhase = ''
+                cp --recursive . $out
+                cat ${finalCss} | tee --append $out/gtk-{3,4}.0/gtk.css
+              '';
+            };
           }
           (
             let

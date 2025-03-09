@@ -8,8 +8,7 @@
 with config.lib.stylix.colors;
 
 {
-  options.stylix.targets.nixos-icons.enable =
-    config.lib.stylix.mkEnableTarget "the NixOS logo" true;
+  options.stylix.targets.nixos-icons.enable = config.lib.stylix.mkEnableTarget "the NixOS logo" true;
 
   config.nixpkgs.overlays =
     lib.mkIf (config.stylix.enable && config.stylix.targets.nixos-icons.enable)

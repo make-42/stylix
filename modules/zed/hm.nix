@@ -13,11 +13,7 @@ in
 
   config =
     lib.mkIf
-      (
-        config.stylix.enable
-        && config.stylix.targets.zed.enable
-        && config.programs.zed-editor.enable
-      )
+      (config.stylix.enable && config.stylix.targets.zed.enable && config.programs.zed-editor.enable)
       {
         programs.zed-editor.userSettings = {
           "buffer_font_family" = config.stylix.fonts.monospace.name;

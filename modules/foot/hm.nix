@@ -9,15 +9,12 @@ let
 
 in
 {
-  options.stylix.targets.foot.enable =
-    config.lib.stylix.mkEnableTarget "Foot" true;
+  options.stylix.targets.foot.enable = config.lib.stylix.mkEnableTarget "Foot" true;
 
   config.programs.foot.settings = lib.mkIf cfg.enable {
     main = {
       include = theme;
-      font =
-        with config.stylix.fonts;
-        "${monospace.name}:size=${toString sizes.terminal}";
+      font = with config.stylix.fonts; "${monospace.name}:size=${toString sizes.terminal}";
       dpi-aware = "no";
     };
     colors.alpha = with config.stylix.opacity; terminal;

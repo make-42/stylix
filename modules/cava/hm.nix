@@ -5,9 +5,7 @@ let
   mkGradient =
     colors:
     lib.listToAttrs (
-      lib.imap0 (
-        i: c: lib.nameValuePair "gradient_color_${toString (i + 1)}" "'#${c}'"
-      ) colors
+      lib.imap0 (i: c: lib.nameValuePair "gradient_color_${toString (i + 1)}" "'#${c}'") colors
     )
     // {
       gradient = 1;
@@ -36,8 +34,6 @@ in
       cfg = config.stylix.targets.cava;
     in
     lib.mkIf (config.stylix.enable && cfg.enable) {
-      programs.cava.settings.color = lib.mkIf cfg.rainbow.enable (
-        mkGradient rainbowColors
-      );
+      programs.cava.settings.color = lib.mkIf cfg.rainbow.enable (mkGradient rainbowColors);
     };
 }

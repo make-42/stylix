@@ -37,8 +37,7 @@ in
           })
 
           (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".text =
-              template;
+            home.file."Library/Application Support/vesktop/themes/stylix.theme.css".text = template;
           })
         ]
       ))

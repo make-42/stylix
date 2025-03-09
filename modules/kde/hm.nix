@@ -32,9 +32,7 @@ let
     else
       throw "unreachable (image merge in stylix KDE module)";
 
-  formatValue =
-    value:
-    if lib.isBool value then if value then "true" else "false" else toString value;
+  formatValue = value: if lib.isBool value then if value then "true" else "false" else toString value;
 
   formatSection =
     path: data:
@@ -46,9 +44,7 @@ let
       directChildren = partitioned.right;
       indirectChildren = partitioned.wrong;
     in
-    lib.optional (directChildren != [ ]) header
-    ++ directChildren
-    ++ lib.flatten indirectChildren;
+    lib.optional (directChildren != [ ]) header ++ directChildren ++ lib.flatten indirectChildren;
 
   formatLines =
     path: data:
@@ -353,32 +349,29 @@ in
     };
   };
 
-  config =
-    lib.mkIf
-      (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux)
-      {
-        home = {
-          packages = [ themePackage ];
+  config = lib.mkIf (config.stylix.enable && cfg.enable && pkgs.stdenv.hostPlatform.isLinux) {
+    home = {
+      packages = [ themePackage ];
 
-          # This activation entry will run the theme activator when the homeConfiguration is activated
-          activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            ${activator} || verboseEcho \
-              "Stylix KDE theme setting failed. This only works in a running Plasma session."
-          '';
-        };
+      # This activation entry will run the theme activator when the homeConfiguration is activated
+      activation.stylixLookAndFeel = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${activator} || verboseEcho \
+          "Stylix KDE theme setting failed. This only works in a running Plasma session."
+      '';
+    };
 
-        xdg = {
-          systemDirs.config = [ "${configPackage}" ];
+    xdg = {
+      systemDirs.config = [ "${configPackage}" ];
 
-          # This desktop entry will run the theme activator when a new Plasma session is started
-          # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
-          configFile."autostart/stylix-activate-kde.desktop".text = ''
-            [Desktop Entry]
-            Type=Application
-            Exec=${activator}
-            Name=Stylix: activate KDE theme
-            X-KDE-AutostartScript=true
-          '';
-        };
-      };
+      # This desktop entry will run the theme activator when a new Plasma session is started
+      # Note: This doesn't run again if a new homeConfiguration is activated from a running Plasma session
+      configFile."autostart/stylix-activate-kde.desktop".text = ''
+        [Desktop Entry]
+        Type=Application
+        Exec=${activator}
+        Name=Stylix: activate KDE theme
+        X-KDE-AutostartScript=true
+      '';
+    };
+  };
 }

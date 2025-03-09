@@ -5,8 +5,7 @@ let
   inherit (config.stylix) fonts;
 in
 {
-  options.stylix.targets.sxiv.enable =
-    config.lib.stylix.mkEnableTarget "Sxiv" true;
+  options.stylix.targets.sxiv.enable = config.lib.stylix.mkEnableTarget "Sxiv" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.sxiv.enable) {
     xresources = {

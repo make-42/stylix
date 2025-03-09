@@ -12,8 +12,7 @@ let
 
 in
 {
-  options.stylix.targets.gnome.enable =
-    config.lib.stylix.mkEnableTarget "GNOME and GDM" true;
+  options.stylix.targets.gnome.enable = config.lib.stylix.mkEnableTarget "GNOME and GDM" true;
 
   config =
     lib.mkIf

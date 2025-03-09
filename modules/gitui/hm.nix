@@ -12,8 +12,7 @@ let
     "Rgb(${r}, ${g}, ${b})";
 in
 {
-  options.stylix.targets.gitui.enable =
-    config.lib.stylix.mkEnableTarget "GitUI" true;
+  options.stylix.targets.gitui.enable = config.lib.stylix.mkEnableTarget "GitUI" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.gitui.enable) {
     programs.gitui.theme = ''

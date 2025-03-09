@@ -53,9 +53,7 @@ let
           \ 'base0F': '${base0F}',
         \ }
 
-        set guifont=${
-          lib.escape [ " " ] fonts.monospace.name
-        }:h${toString fonts.sizes.terminal}
+        set guifont=${lib.escape [ " " ] fonts.monospace.name}:h${toString fonts.sizes.terminal}
       '';
     };
 

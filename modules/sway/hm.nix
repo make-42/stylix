@@ -63,8 +63,7 @@ in
 
         output."*".bg =
           lib.mkIf cfg.useWallpaper "${config.stylix.image} ${config.stylix.imageScalingMode}";
-        seat."*".xcursor_theme =
-          ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
+        seat."*".xcursor_theme = ''"${config.stylix.cursor.name}" ${toString config.stylix.cursor.size}'';
       };
     })
 

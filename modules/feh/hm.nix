@@ -21,11 +21,7 @@ in
         && cfg.enable
         && (
           with config.xsession.windowManager;
-          bspwm.enable
-          || herbstluftwm.enable
-          || i3.enable
-          || spectrwm.enable
-          || xmonad.enable
+          bspwm.enable || herbstluftwm.enable || i3.enable || spectrwm.enable || xmonad.enable
         )
       )
       (

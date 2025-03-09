@@ -6,15 +6,12 @@
 with config.stylix.fonts;
 with config.lib.stylix.colors.withHashtag;
 {
-  options.stylix.targets.tofi.enable =
-    config.lib.stylix.mkEnableTarget "Tofi" true;
+  options.stylix.targets.tofi.enable = config.lib.stylix.mkEnableTarget "Tofi" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.tofi.enable) {
     programs.tofi.settings =
       let
-        opacity = lib.toHexString (
-          ((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100
-        );
+        opacity = lib.toHexString (((builtins.ceil (config.stylix.opacity.popups * 100)) * 255) / 100);
         background = base00 + opacity;
         foreground = base05;
         darkForeground = base04 + opacity;
