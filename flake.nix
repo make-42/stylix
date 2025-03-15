@@ -154,11 +154,6 @@
               self.checks.${system}.git-hooks.enabledPackages
             ];
           };
-
-          ghc = pkgs.mkShell {
-            inputsFrom = [ self.devShells.${system}.default ];
-            packages = [ pkgs.ghc ];
-          };
         };
 
         packages =
@@ -209,7 +204,7 @@
     )
     // {
       nixosModules.stylix =
-        args:
+        { pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/nixos inputs)
@@ -224,7 +219,7 @@
         };
 
       homeManagerModules.stylix =
-        args:
+        { pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/hm inputs)
@@ -238,7 +233,7 @@
         };
 
       darwinModules.stylix =
-        args:
+        { pkgs, ... }@args:
         {
           imports = [
             (import ./stylix/darwin inputs)
