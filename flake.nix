@@ -159,11 +159,6 @@
               self.checks.${system}.git-hooks.enabledPackages
             ];
           };
-
-          ghc = pkgs.mkShell {
-            inputsFrom = [ self.devShells.${system}.default ];
-            packages = [ pkgs.ghc ];
-          };
         };
 
         packages =
