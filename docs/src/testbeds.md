@@ -51,10 +51,16 @@ github:danth/stylix
 └───packages
     └───x86_64-linux
         ├───docs: package 'stylix-book'
-        ├───testbed:gnome:default:dark: package 'testbed:gnome:default:dark'
-        ├───testbed:gnome:default:light: package 'testbed:gnome:default:light'
-        ├───testbed:kde:default:dark: package 'testbed:kde:default:dark'
-        └───testbed:kde:default:light: package 'testbed:kde:default:light'
+        ├───"testbed:gnome:default:dark:image:scheme:cursor": package 'testbed-gnome-default-dark-image-scheme-cursor'
+        ├───"testbed:gnome:default:dark:image:scheme:cursorless": package 'testbed-gnome-default-dark-image-scheme-cursorless'
+        ├───"testbed:gnome:default:dark:image:schemeless:cursorless": package 'testbed-gnome-default-dark-image-schemeless-cursorless'
+        ├───"testbed:gnome:default:dark:imageless:scheme:cursorless": package 'testbed-gnome-default-dark-imageless-scheme-cursorless'
+        ├───"testbed:gnome:default:light:image:scheme:cursorless": package 'testbed-gnome-default-light-image-scheme-cursorless'
+        ├───"testbed:kde:default:dark:image:scheme:cursor": package 'testbed-kde-default-dark-image-scheme-cursor'
+        ├───"testbed:kde:default:dark:image:scheme:cursorless": package 'testbed-kde-default-dark-image-scheme-cursorless'
+        ├───"testbed:kde:default:dark:image:schemeless:cursorless": package 'testbed-kde-default-dark-image-schemeless-cursorless'
+        ├───"testbed:kde:default:dark:imageless:scheme:cursorless": package 'testbed-kde-default-dark-imageless-scheme-cursorless'
+        └───"testbed:kde:default:light:image:scheme:cursorless": package 'testbed-kde-default-light-image-scheme-cursorless'
 ```
 
 (This has been edited down to only the relevant parts.)
@@ -63,7 +69,7 @@ To start a testbed, each of which is named in the format
 `testbed:«module»:«testbed»:«polarity»`, run the following command:
 
 ```console
-user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»
+user@host:~$ nix run .#testbed:«module»:«testbed»:«polarity»:«image»:«scheme»:«cursor»
 ```
 
 Any package with a name not fitting the given format is not a testbed,
