@@ -207,9 +207,9 @@
     )
     // {
       nixosModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
-          inherit pkgs;
           imports = [
             (import ./stylix/nixos inputs)
             {
@@ -223,9 +223,9 @@
         };
 
       homeManagerModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
-          inherit pkgs;
           imports = [
             (import ./stylix/hm inputs)
             {
@@ -238,9 +238,9 @@
         };
 
       darwinModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
-          inherit pkgs;
           imports = [
             (import ./stylix/darwin inputs)
             {
@@ -254,9 +254,9 @@
         };
 
       nixOnDroidModules.stylix =
+        # deadnix: skip
         { pkgs, ... }@args:
         {
-          inherit pkgs;
           imports = [
             (import ./stylix/droid inputs)
             {
