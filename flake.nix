@@ -206,54 +206,62 @@
       }
     )
     // {
-      nixosModules.stylix = args: {
-        imports = [
-          (import ./stylix/nixos inputs)
-          {
-            stylix = {
-              inherit inputs;
-              base16 = base16.lib args;
-              homeManagerIntegration.module = self.homeManagerModules.stylix;
-            };
-          }
-        ];
-      };
+      nixosModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/nixos inputs)
+            {
+              stylix = {
+                inherit inputs;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
+          ];
+        };
 
-      homeManagerModules.stylix = args: {
-        imports = [
-          (import ./stylix/hm inputs)
-          {
-            stylix = {
-              inherit inputs;
-              base16 = base16.lib args;
-            };
-          }
-        ];
-      };
+      homeManagerModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/hm inputs)
+            {
+              stylix = {
+                inherit inputs;
+                base16 = base16.lib args;
+              };
+            }
+          ];
+        };
 
-      darwinModules.stylix = args: {
-        imports = [
-          (import ./stylix/darwin inputs)
-          {
-            stylix = {
-              inherit inputs;
-              base16 = base16.lib args;
-              homeManagerIntegration.module = self.homeManagerModules.stylix;
-            };
-          }
-        ];
-      };
+      darwinModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/darwin inputs)
+            {
+              stylix = {
+                inherit inputs;
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
+          ];
+        };
 
-      nixOnDroidModules.stylix = args: {
-        imports = [
-          (import ./stylix/droid inputs)
-          {
-            stylix = {
-              base16 = base16.lib args;
-              homeManagerIntegration.module = self.homeManagerModules.stylix;
-            };
-          }
-        ];
-      };
+      nixOnDroidModules.stylix =
+        { pkgs, ... }@args:
+        {
+          imports = [
+            (import ./stylix/droid inputs)
+            {
+              stylix = {
+                base16 = base16.lib args;
+                homeManagerIntegration.module = self.homeManagerModules.stylix;
+              };
+            }
+          ];
+        };
     };
 }
