@@ -208,6 +208,9 @@
     // {
       nixosModules.stylix =
         { pkgs, ... }@args:
+        let
+          _ = pkgs; # Prevents Deadnix from flagging it as unused
+        in
         {
           imports = [
             (import ./stylix/nixos inputs)
@@ -223,6 +226,9 @@
 
       homeManagerModules.stylix =
         { pkgs, ... }@args:
+        let
+          _ = pkgs; # Prevents Deadnix from flagging it as unused
+        in
         {
           imports = [
             (import ./stylix/hm inputs)
@@ -237,6 +243,9 @@
 
       darwinModules.stylix =
         { pkgs, ... }@args:
+        let
+          _ = pkgs; # Prevents Deadnix from flagging it as unused
+        in
         {
           imports = [
             (import ./stylix/darwin inputs)
@@ -252,6 +261,9 @@
 
       nixOnDroidModules.stylix =
         { pkgs, ... }@args:
+        let
+          _ = pkgs; # Prevents Deadnix from flagging it as unused
+        in
         {
           imports = [
             (import ./stylix/droid inputs)
