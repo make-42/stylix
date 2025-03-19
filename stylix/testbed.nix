@@ -231,7 +231,7 @@ let
         enable = true;
         image = images.dark;
         base16Scheme = "${inputs.tinted-schemes}/base16/catppuccin-macchiato.yaml";
-        polarity = "dark";
+        themeGeneration.polarity = "dark";
         cursor = {
           name = "Vanilla-DMZ";
           package = pkgs.vanilla-dmz;
