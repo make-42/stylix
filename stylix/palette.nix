@@ -36,7 +36,7 @@ let
     + builtins.toString (
       lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj))
     )
-    + builtins.toString (
+    + toString (
       lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj))
     );
 in
