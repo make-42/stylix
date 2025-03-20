@@ -30,7 +30,7 @@ let
         in
         if diff >= 0.5 then floored + 1 else floored;
     in
-    builtins.toString (
+    toString (
       lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj))
     )
     + builtins.toString (
