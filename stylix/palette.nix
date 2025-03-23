@@ -7,32 +7,6 @@
 }:
 let
   cfg = config.stylix;
-  adjustLightness =
-    rgbColorString: primaryScale:
-    let
-      stripped = builtins.replaceStrings [ "rgb(" ")" ] [ "" "" ] rgbColorString;
-      values = builtins.split "," stripped;
-      v1 = builtins.fromJSON (builtins.elemAt values 0);
-      v2 = builtins.fromJSON (builtins.elemAt values 2);
-      v3 = builtins.fromJSON (builtins.elemAt values 4);
-      preLightness = (v1 + v2 + v3) / 3.0;
-      adj =
-        (preLightness / 255.0 * (1.0 - primaryScale) + primaryScale) / preLightness
-        * 255.0;
-      v1adj = lib.max (lib.min (v1 * adj) 255.0) 0.0;
-      v2adj = lib.max (lib.min (v2 * adj) 255.0) 0.0;
-      v3adj = lib.max (lib.min (v3 * adj) 255.0) 0.0;
-      round =
-        x:
-        let
-          floored = builtins.floor x;
-          diff = x - floored;
-        in
-        if diff >= 0.5 then floored + 1 else floored;
-    in
-    toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj)))
-    + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj)))
-    + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj)));
 in
 {
   imports = [
@@ -193,6 +167,32 @@ in
         internal = true;
         default =
           let
+            adjustLightness =
+              rgbColorString: primaryScale:
+              let
+                stripped = builtins.replaceStrings [ "rgb(" ")" ] [ "" "" ] rgbColorString;
+                values = builtins.split "," stripped;
+                v1 = builtins.fromJSON (builtins.elemAt values 0);
+                v2 = builtins.fromJSON (builtins.elemAt values 2);
+                v3 = builtins.fromJSON (builtins.elemAt values 4);
+                preLightness = (v1 + v2 + v3) / 3.0;
+                adj =
+                  (preLightness / 255.0 * (1.0 - primaryScale) + primaryScale) / preLightness
+                  * 255.0;
+                v1adj = lib.max (lib.min (v1 * adj) 255.0) 0.0;
+                v2adj = lib.max (lib.min (v2 * adj) 255.0) 0.0;
+                v3adj = lib.max (lib.min (v3 * adj) 255.0) 0.0;
+                round =
+                  x:
+                  let
+                    floored = builtins.floor x;
+                    diff = x - floored;
+                  in
+                  if diff >= 0.5 then floored + 1 else floored;
+              in
+              toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj)))
+              + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj)))
+              + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj)));
             jsonData = lib.importJSON cfg.generated.json;
             colors =
               if cfg.themeGeneration.polarity == "light" then
