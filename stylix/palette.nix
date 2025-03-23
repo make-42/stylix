@@ -48,8 +48,6 @@ in
           Value from -1 to 1. -1 represents minimum contrast,
           0 represents standard (i.e. the design as spec'd),
           and 1 represents maximum contrast.
-
-          By default, 0 will be used.
         '';
       };
 
@@ -63,8 +61,6 @@ in
             Value from -1 to 1. -1 represents minimum contrast,
             0 represents standard (i.e. the design as spec'd),
             and 1 represents maximum contrast.
-
-            By default, 0 will be used.
           '';
         };
         light = lib.mkOption {
@@ -76,8 +72,6 @@ in
             Value from -1 to 1. -1 represents minimum contrast,
             0 represents standard (i.e. the design as spec'd),
             and 1 represents maximum contrast.
-
-            By default, 0 will be used.
           '';
         };
       };
