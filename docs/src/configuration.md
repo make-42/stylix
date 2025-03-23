@@ -18,23 +18,6 @@ To enable the Stylix module, declare:
 
 ## Color scheme
 
-### Generated schemes
-
-If you only set a wallpaper, Stylix will use [matugen](https://github.com/InioX/matugen)
-to create a color scheme.
-
-You can force a light or dark scheme using the polarity option:
-
-```nix
-{
-  stylix.themeGeneration.polarity = "dark";
-}
-```
-
-The current scheme can be previewed in a web browser at either
-[`/etc/stylix/palette.html`](file:///etc/stylix/palette.html) for NixOS, or
-`~/.config/stylix/palette.html` for Home Manager.
-
 ### Handmade schemes
 
 To set a [Tinted Theming](https://github.com/tinted-theming/schemes) color
@@ -113,7 +96,8 @@ To set a wallpaper, provide a path or an arbitrary derivation:
 
 If `stylix.base16Scheme` is undeclared, Stylix generates a color scheme based on
 the wallpaper using [matugen](https://github.com/InioX/matugen). Note that more
-colorful images tend to yield better results.
+colorful images tend to yield better results. The polarity can be schewed
+towards a dark or light theme with:
 
 - ```nix
   {
