@@ -23,21 +23,18 @@ in
     themeGeneration = {
       scheme = lib.mkOption {
         type = lib.types.enum [
-          "scheme-content"
-          "scheme-expressive"
-          "scheme-fidelity"
-          "scheme-fruit-salad"
-          "scheme-monochrome"
-          "scheme-neutral"
-          "scheme-rainbow"
-          "scheme-tonal-spot"
+          "content"
+          "expressive"
+          "fidelity"
+          "fruit-salad"
+          "monochrome"
+          "neutral"
+          "rainbow"
+          "tonal-spot"
         ];
-        default = "scheme-tonal-spot";
-        description = ''
-          Use this option to select a color scheme type.
-
-          By default we will select matugen's default color scheme type.
-        '';
+        default = "tonal-spot";
+        description = "Use this option to select a color scheme type.";
+        apply = option: "scheme-${option}";
       };
       contrast = lib.mkOption {
         type = lib.types.float;
