@@ -41,7 +41,7 @@ in
         "stylix"
         "polarity"
       ]
-      "The stylix.polarity option has been removed as a new palette generation backend is now used. New options for this palette generation backend are available at stylix.themeGeneration. The new stylix.themeGeneration.polarity sets the generated theme polarity (\"dark\", \"light\" options) and the \"either\" option doesn't exist anymore. You have to explicitly choose what polarity you want. The new options, stylix.themeGeneration.scheme, stylix.themeGeneration.contrast, stylix.themeGeneration.primaryScale.light, and stylix.themeGeneration.primaryScale.dark, let you tweak the generated color scheme further if need be."
+      "stylix: `stylix.polarity` has been removed in favor of `stylix.themeGeneration.polarity`, and its `either` value is no longer available"
     )
   ];
 
