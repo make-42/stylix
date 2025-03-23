@@ -176,7 +176,7 @@ in
         # garbage collection.
         default = pkgs.runCommand "raw-palette.json" { } ''
           ${lib.getExe pkgs.matugen} \
-            --contrast ${lib.strings.floatToString cfg.themeGeneration.contrast} \
+            --contrast ${toString cfg.themeGeneration.contrast} \
             --dry-run \
             --json rgb \
             --type ${cfg.themeGeneration.scheme} \
