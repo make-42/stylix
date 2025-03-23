@@ -175,14 +175,14 @@ in
         # the output of the palette generator will not be protected from
         # garbage collection.
         default = pkgs.runCommand "raw-palette.json" { } ''
-          ${pkgs.matugen}/bin/matugen \
-            --json rgb \
-            --type ${cfg.themeGeneration.scheme} \
+          ${lib.getExe pkgs.matugen} \
             --contrast ${lib.strings.floatToString cfg.themeGeneration.contrast} \
             --dry-run \
+            --json rgb \
+            --type ${cfg.themeGeneration.scheme} \
             image \
             "${cfg.image}" \
-            > "$out"
+            >"$out"
         '';
       };
 
