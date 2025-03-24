@@ -42,7 +42,6 @@ in
         description = ''
           Use this option to change the generated color scheme's contrast.
 
-          Value from -1 to 1. -1 represents minimum contrast,
           0 represents standard (i.e. the design as spec'd),
           and 1 represents maximum contrast.
         '';
@@ -55,7 +54,6 @@ in
           description = ''
             Use this option to change the generated dark color scheme's contrast.
 
-            Value from -1 to 1. -1 represents minimum contrast,
             0 represents standard (i.e. the design as spec'd),
             and 1 represents maximum contrast.
           '';
@@ -66,7 +64,6 @@ in
           description = ''
             Use this option to change the generated light color scheme's contrast.
 
-            Value from -1 to 1. -1 represents minimum contrast,
             0 represents standard (i.e. the design as spec'd),
             and 1 represents maximum contrast.
           '';
