@@ -150,50 +150,48 @@
           maintainers-sorted = (import ./stylix/check-maintainers-sorted.nix) pkgs;
         } self.packages.${system};
 
-        devShells.default = pkgs.mkShell {
-          inherit (self.checks.${system}.git-hooks) shellHook;
+        devShells = {
+          default =
+            let
+              check = pkgs.writeShellApplication {
+                name = "stylix-check";
+                runtimeInputs = with pkgs; [
+                  nix
+                  nix-fast-build
+                ];
+                text = ''
+                  cores="$(nproc)"
+                  system="$(nix eval --expr builtins.currentSystem --impure --raw)"
+                  nix-fast-build \
+                    --eval-max-memory-size 512 \
+                    --eval-workers "$cores" \
+                    --flake ".#checks.$system" \
+                    --no-link \
+                    --skip-cached \
+                    "$@"
+                '';
+              };
+            in
+            pkgs.mkShell {
+              inherit (self.checks.${system}.git-hooks) shellHook;
 
-          packages = [
-            inputs.home-manager.packages.${system}.default
-            self.checks.${system}.git-hooks.enabledPackages
-          ];
+              packages = [
+                check
+                inputs.home-manager.packages.${system}.default
+                self.checks.${system}.git-hooks.enabledPackages
+              ];
+            };
+
+          ghc = pkgs.mkShell {
+            inputsFrom = [ self.devShells.${system}.default ];
+            packages = [ pkgs.ghc ];
+          };
         };
 
         packages =
           let
             universalPackages = {
               docs = import ./docs { inherit pkgs inputs lib; };
-
-              nix-flake-check = pkgs.writeShellApplication {
-                meta.description = "A parallelized alternative to 'nix flake check'";
-                name = "nix-flake-check";
-
-                runtimeInputs = with pkgs; [
-                  nix
-                  jq
-                  parallel
-                ];
-
-                text = ''
-                  nix flake show --json --no-update-lock-file ${self} |
-                    jq --raw-output '
-                      ((.checks."${system}" // {}) | keys) as $checks |
-                      ((.packages."${system}" // {}) | keys) as $packages |
-                      (($checks - $packages)[] | "checks.${system}.\(.)"),
-                      ($packages[] | "packages.${system}.\(.)")
-                    ' |
-                    parallel \
-                      --bar \
-                      --color \
-                      --color-failed \
-                      --halt now,fail=1 \
-                      --tagstring '{}' \
-                      '
-                        nix build --no-update-lock-file --print-build-logs \
-                          ${self}#{}
-                      '
-                '';
-              };
             };
 
             # Testbeds are virtual machines based on NixOS, therefore they are
@@ -201,8 +199,19 @@
             testbedPackages = lib.optionalAttrs (lib.hasSuffix "-linux" system) (
               import ./stylix/testbed.nix { inherit pkgs inputs lib; }
             );
+
+            # Discord is not available on arm64. This workaround filters out
+            # testbeds using that package, until we have a better way to handle
+            # this.
+            testbedPackages' =
+              if system == "aarch64-linux" then
+                lib.filterAttrs (
+                  name: _: !lib.hasPrefix "testbed:discord:vencord" name
+                ) testbedPackages
+              else
+                testbedPackages;
           in
-          universalPackages // testbedPackages;
+          universalPackages // testbedPackages';
       }
     )
     // {
