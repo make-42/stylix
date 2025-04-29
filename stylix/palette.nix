@@ -42,8 +42,8 @@ in
         description = ''
           Use this option to change the generated color scheme's contrast.
 
-          0 represents standard (i.e. the design as spec'd),
-          and 1 represents maximum contrast.
+          `-1` represents minimum contrast, `0` represents standard (i.e. the
+          design as spec'd), and `1` represents maximum contrast.
         '';
       };
 
