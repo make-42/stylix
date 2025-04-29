@@ -52,20 +52,20 @@ in
           type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
           default = 0.0;
           description = ''
-            Use this option to change the generated dark color scheme's contrast.
+            Use this option to change the generated dark color scheme's lightness.
 
-            0 represents standard (i.e. the design as spec'd),
-            and 1 represents maximum contrast.
+            `-1` represents minimum lightness, `0` represents standard (i.e. the
+            design as spec'd), and `1` represents maximum lightness.
           '';
         };
         light = lib.mkOption {
           type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
           default = 0.0;
           description = ''
-            Use this option to change the generated light color scheme's contrast.
+            Use this option to change the generated light color scheme's lightness.
 
-            0 represents standard (i.e. the design as spec'd),
-            and 1 represents maximum contrast.
+            `-1` represents minimum lightness, `0` represents standard (i.e. the
+            design as spec'd), and `1` represents maximum lightness.
           '';
         };
       };
