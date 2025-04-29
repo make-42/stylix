@@ -134,9 +134,9 @@
               deadnix.enable = true;
               editorconfig-checker.enable = true;
 
-              nixfmt-rfc-style = {
+              treefmt = {
                 enable = true;
-                settings.width = 80;
+                package = self.formatter.${system};
               };
 
               statix.enable = true;
@@ -179,12 +179,37 @@
                 check
                 inputs.home-manager.packages.${system}.default
                 self.checks.${system}.git-hooks.enabledPackages
-              ];
+                self.formatter.${system}
+              ] ++ self.formatter.${system}.runtimeInputs;
             };
 
           ghc = pkgs.mkShell {
             inputsFrom = [ self.devShells.${system}.default ];
             packages = [ pkgs.ghc ];
+          };
+        };
+
+        formatter = pkgs.treefmt.withConfig {
+          runtimeInputs = with pkgs; [
+            nixfmt-rfc-style
+            stylish-haskell
+          ];
+
+          settings = {
+            on-unmatched = "info";
+            tree-root-file = "flake.nix";
+
+            formatter = {
+              stylish-haskell = {
+                command = "stylish-haskell";
+                includes = [ "*.hx" ];
+              };
+              nixfmt = {
+                command = "nixfmt";
+                options = [ "--width=80" ];
+                includes = [ "*.nix" ];
+              };
+            };
           };
         };
 
