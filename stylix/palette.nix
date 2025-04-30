@@ -47,29 +47,6 @@ in
         '';
       };
 
-      primaryScale = {
-        dark = lib.mkOption {
-          type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
-          default = 0.0;
-          description = ''
-            Use this option to change the generated dark color scheme's lightness.
-
-            `-1` represents minimum lightness, `0` represents standard (i.e. the
-            design as spec'd), and `1` represents maximum lightness.
-          '';
-        };
-        light = lib.mkOption {
-          type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
-          default = 0.0;
-          description = ''
-            Use this option to change the generated light color scheme's lightness.
-
-            `-1` represents minimum lightness, `0` represents standard (i.e. the
-            design as spec'd), and `1` represents maximum lightness.
-          '';
-        };
-      };
-
       polarity = lib.mkOption {
         type = lib.types.enum [
           "light"
@@ -155,26 +132,19 @@ in
         internal = true;
         default =
           let
-            colors =
-              builtins.mapAttrs
+            colors = builtins.mapAttrs (
+              _: value:
+              lib.concatMapStrings
                 (
-                  _: value:
-                  lib.concatMapStrings
-                    (
-                      component:
-                      lib.strings.fixedWidthString 2 "0" (
-                        lib.toHexString (lib.strings.toInt component)
-                      )
-                    )
-                    (
-                      builtins.match
-                      ''rgb\(([[:digit:]]+)\.0, ([[:digit:]]+)\.0, ([[:digit:]]+)\.0\)''
-                      value
-                    )
+                  component:
+                  lib.strings.fixedWidthString 2 "0" (
+                    lib.toHexString (lib.strings.toInt component)
+                  )
                 )
-                (lib.importJSON cfg.generated.json).colors.${
-                  cfg.themeGeneration.polarity
-                };
+                (
+                  builtins.match ''rgb\(([[:digit:]]+)\.0, ([[:digit:]]+)\.0, ([[:digit:]]+)\.0\)'' value
+                )
+            ) (lib.importJSON cfg.generated.json).colors.${cfg.themeGeneration.polarity};
           in
           {
             base00 = colors.background;
@@ -193,7 +163,7 @@ in
             base0D = colors.surface_tint;
             base0E = colors.on_tertiary_fixed;
             base0F = colors.on_error_container;
-          }
+          };
       };
 
       fileTree = lib.mkOption {
