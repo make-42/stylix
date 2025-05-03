@@ -1,4 +1,5 @@
 { config, lib, ... }:
+
 let
   rgb-to-hsl = import ./rgb-to-hsl.nix { inherit lib config; };
 in
@@ -10,7 +11,7 @@ in
     lib.mkIf (config.stylix.enable && config.stylix.targets.glance.enable)
       {
         services.glance.settings.theme = {
-          light = config.stylix.themeGeneration.polarity == "light";
+          light = config.stylix.polarity == "light";
           contrast-multiplier = 1.0;
           background-color = rgb-to-hsl "base00";
           primary-color = rgb-to-hsl "base05";
