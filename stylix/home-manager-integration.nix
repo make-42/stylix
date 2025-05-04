@@ -175,6 +175,22 @@ let
           path = [
             "stylix"
             "themeGeneration"
+            "primaryScale"
+            "dark"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
+            "primaryScale"
+            "light"
+          ];
+        }
+        {
+          path = [
+            "stylix"
+            "themeGeneration"
           ];
         }
         {

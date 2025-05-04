@@ -47,6 +47,29 @@ in
         '';
       };
 
+      primaryScale = {
+        dark = lib.mkOption {
+          type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
+          default = 0.0;
+          description = ''
+            Use this option to change the generated dark color scheme's lightness.
+
+            `-1` represents minimum lightness, `0` represents standard (i.e. the
+            design as spec'd), and `1` represents maximum lightness.
+          '';
+        };
+        light = lib.mkOption {
+          type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
+          default = 0.0;
+          description = ''
+            Use this option to change the generated light color scheme's lightness.
+
+            `-1` represents minimum lightness, `0` represents standard (i.e. the
+            design as spec'd), and `1` represents maximum lightness.
+          '';
+        };
+      };
+
       polarity = lib.mkOption {
         type = lib.types.enum [
           "light"
@@ -132,57 +155,86 @@ in
         internal = true;
         default =
           let
-            colors = builtins.mapAttrs (
-              _: value:
-              lib.concatMapStrings
-                (
-                  component:
-                  lib.strings.fixedWidthString 2 "0" (
-                    lib.toHexString (lib.strings.toInt component)
+            adjustLightness =
+              rgbColorString: primaryScale:
+              let
+                values = builtins.split "," (
+                  builtins.replaceStrings [ "rgb(" ")" ] [ "" "" ] rgbColorString
+                );
+                preLightness =
+                  (
+                    (builtins.fromJSON (builtins.elemAt values 0))
+                    + (builtins.fromJSON (builtins.elemAt values 2))
+                    + (builtins.fromJSON (builtins.elemAt values 4))
                   )
-                )
-                (
-                  builtins.match ''rgb\(([[:digit:]]+)\.0, ([[:digit:]]+)\.0, ([[:digit:]]+)\.0\)'' value
-                )
-            ) (lib.importJSON cfg.generated.json).colors.${cfg.themeGeneration.polarity};
+                  / 3.0;
+                adj =
+                  (preLightness / 255.0 * (1.0 - primaryScale) + primaryScale) / preLightness
+                  * 255.0;
+                v1adj = lib.max (lib.min (
+                  builtins.fromJSON (builtins.elemAt values 0) * adj
+                ) 255.0) 0.0;
+                v2adj = lib.max (lib.min (
+                  builtins.fromJSON (builtins.elemAt values 2) * adj
+                ) 255.0) 0.0;
+                v3adj = lib.max (lib.min (
+                  builtins.fromJSON (builtins.elemAt values 4) * adj
+                ) 255.0) 0.0;
+                round =
+                  x:
+                  let
+                    floored = builtins.floor x;
+                    diff = x - floored;
+                  in
+                  if diff >= 0.5 then floored + 1 else floored;
+              in
+              toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v1adj)))
+              + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v2adj)))
+              + toString (lib.strings.fixedWidthString 2 "0" (lib.toHexString (round v3adj)));
+            jsonData = lib.importJSON cfg.generated.json;
+            colors =
+              if cfg.themeGeneration.polarity == "light" then
+                jsonData.colors.light
+              else
+                jsonData.colors.dark;
           in
           if cfg.themeGeneration.polarity == "light" then
             {
-              base00 = colors.background;
-              base01 = colors.surface_container;
-              base02 = colors.surface_container_highest;
-              base03 = colors.outline;
-              base04 = colors.on_surface_variant;
-              base05 = colors.on_surface;
-              base06 = colors.on_secondary_fixed;
-              base07 = colors.on_primary_container;
-              base08 = colors.error;
-              base09 = colors.on_tertiary;
-              base0A = colors.on_secondary_container;
-              base0B = colors.on_secondary_fixed_variant;
-              base0C = colors.on_primary_fixed;
-              base0D = colors.surface_tint;
-              base0E = colors.on_tertiary_fixed;
-              base0F = colors.on_error_container;
+              base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.light;
+              base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.light;
+              base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.light;
+              base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.light;
+              base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.light;
+              base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.light;
+              base06 = adjustLightness colors.on_secondary_fixed cfg.themeGeneration.primaryScale.light;
+              base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.light;
+              base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.light;
+              base09 = adjustLightness colors.on_tertiary cfg.themeGeneration.primaryScale.light;
+              base0A = adjustLightness colors.on_secondary_container cfg.themeGeneration.primaryScale.light;
+              base0B = adjustLightness colors.on_secondary_fixed_variant cfg.themeGeneration.primaryScale.light;
+              base0C = adjustLightness colors.on_primary_fixed cfg.themeGeneration.primaryScale.light;
+              base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.light;
+              base0E = adjustLightness colors.on_tertiary_fixed cfg.themeGeneration.primaryScale.light;
+              base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.light;
             }
           else
             {
-              base00 = colors.background;
-              base01 = colors.surface_container;
-              base02 = colors.surface_container_highest;
-              base03 = colors.outline;
-              base04 = colors.on_surface_variant;
-              base05 = colors.on_surface;
-              base06 = colors.secondary_fixed;
-              base07 = colors.on_primary_container;
-              base08 = colors.error;
-              base09 = colors.tertiary;
-              base0A = colors.secondary;
-              base0B = colors.primary;
-              base0C = colors.primary_fixed;
-              base0D = colors.surface_tint;
-              base0E = colors.tertiary_fixed;
-              base0F = colors.on_error_container;
+              base00 = adjustLightness colors.background cfg.themeGeneration.primaryScale.dark;
+              base01 = adjustLightness colors.surface_container cfg.themeGeneration.primaryScale.dark;
+              base02 = adjustLightness colors.surface_container_highest cfg.themeGeneration.primaryScale.dark;
+              base03 = adjustLightness colors.outline cfg.themeGeneration.primaryScale.dark;
+              base04 = adjustLightness colors.on_surface_variant cfg.themeGeneration.primaryScale.dark;
+              base05 = adjustLightness colors.on_surface cfg.themeGeneration.primaryScale.dark;
+              base06 = adjustLightness colors.secondary_fixed cfg.themeGeneration.primaryScale.dark;
+              base07 = adjustLightness colors.on_primary_container cfg.themeGeneration.primaryScale.dark;
+              base08 = adjustLightness colors.error cfg.themeGeneration.primaryScale.dark;
+              base09 = adjustLightness colors.tertiary cfg.themeGeneration.primaryScale.dark;
+              base0A = adjustLightness colors.secondary cfg.themeGeneration.primaryScale.dark;
+              base0B = adjustLightness colors.primary cfg.themeGeneration.primaryScale.dark;
+              base0C = adjustLightness colors.primary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0D = adjustLightness colors.surface_tint cfg.themeGeneration.primaryScale.dark;
+              base0E = adjustLightness colors.tertiary_fixed cfg.themeGeneration.primaryScale.dark;
+              base0F = adjustLightness colors.on_error_container cfg.themeGeneration.primaryScale.dark;
             };
       };
 
