@@ -32,6 +32,7 @@ in
         description = ''
           [Matugen](https://github.com/InioX/matugen)'s color scheme type.
         '';
+        apply = value: "scheme-${value}";
       };
       contrast = lib.mkOption {
         type = lib.types.addCheck lib.types.float (x: x >= -1.0 && x <= 1.0);
@@ -49,10 +50,7 @@ in
         ];
         default = "dark";
         description = ''
-          Use this option to force a light or dark theme.
-          By default we will select whichever is ranked better by the genetic
-          algorithm. This aims to get good contrast between the foreground and
-          background, as well as some variety in the highlight colours.
+          Use this option to choose between a light or dark theme.
         '';
       };
     };
@@ -113,17 +111,17 @@ in
         default =
           pkgs.runCommand "palette.json"
             {
-              nativeBuildInputs = [ pkgs.matugen ];
-              CONTRAST = toString cfg.colorGeneration.contrast;
-              SCHEME = cfg.colorGeneration.scheme;
+              CONTRAST = cfg.colorGeneration.contrast;
               IMAGE = cfg.image;
+              SCHEME = cfg.colorGeneration.scheme;
+              nativeBuildInputs = [ pkgs.matugen ];
             }
             ''
               matugen \
-                --contrast $CONTRAST \
+                --contrast "$CONTRAST" \
                 --dry-run \
                 --json strip \
-                --type scheme-$SCHEME \
+                --type "$SCHEME" \
                 image \
                 "$IMAGE" \
                 >"$out"
@@ -140,26 +138,7 @@ in
             colors =
               (lib.importJSON cfg.generated.json).colors.${cfg.colorGeneration.polarity};
           in
-          if cfg.colorGeneration.polarity == "light" then
-            {
-              base00 = colors.background;
-              base01 = colors.surface_container;
-              base02 = colors.surface_container_highest;
-              base03 = colors.outline;
-              base04 = colors.on_surface_variant;
-              base05 = colors.on_surface;
-              base06 = colors.on_secondary_fixed;
-              base07 = colors.on_primary_container;
-              base08 = colors.error;
-              base09 = colors.on_tertiary;
-              base0A = colors.on_secondary_container;
-              base0B = colors.on_secondary_fixed_variant;
-              base0C = colors.on_primary_fixed;
-              base0D = colors.surface_tint;
-              base0E = colors.on_tertiary_fixed;
-              base0F = colors.on_error_container;
-            }
-          else
+          if cfg.colorGeneration.polarity == "dark" then
             {
               base00 = colors.background;
               base01 = colors.surface_container;
@@ -176,6 +155,25 @@ in
               base0C = colors.primary_fixed;
               base0D = colors.surface_tint;
               base0E = colors.tertiary_fixed;
+              base0F = colors.on_error_container;
+            }
+          else
+            {
+              base00 = colors.background;
+              base01 = colors.surface_container;
+              base02 = colors.surface_container_highest;
+              base03 = colors.outline;
+              base04 = colors.on_surface_variant;
+              base05 = colors.on_surface;
+              base06 = colors.on_secondary_fixed;
+              base07 = colors.on_primary_container;
+              base08 = colors.error;
+              base09 = colors.on_tertiary;
+              base0A = colors.on_secondary_container;
+              base0B = colors.on_secondary_fixed_variant;
+              base0C = colors.on_primary_fixed;
+              base0D = colors.surface_tint;
+              base0E = colors.on_tertiary_fixed;
               base0F = colors.on_error_container;
             };
       };
