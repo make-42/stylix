@@ -111,10 +111,12 @@ in
         default =
           pkgs.runCommand "palette.json"
             {
-              CONTRAST = cfg.colorGeneration.contrast;
-              IMAGE = cfg.image;
-              SCHEME = cfg.colorGeneration.scheme;
               nativeBuildInputs = [ pkgs.matugen ];
+              env = {
+                CONTRAST = cfg.colorGeneration.contrast;
+                IMAGE = cfg.image;
+                SCHEME = cfg.colorGeneration.scheme;
+              };
             }
             ''
               matugen \
