@@ -114,7 +114,7 @@ in
             {
               nativeBuildInputs = [ pkgs.matugen ];
               env = {
-                CONTRAST = cfg.colorGeneration.contrast;
+                CONTRAST = toString cfg.colorGeneration.contrast;
                 IMAGE = cfg.image;
                 SCHEME = cfg.colorGeneration.scheme;
               };
