@@ -148,8 +148,8 @@ in
                 base01 = colors.surface_container;
                 base02 = colors.surface_container_highest;
                 base03 = colors.outline;
-                base04 = colors.on_surface;
-                base05 = colors.on_surface_variant;
+                base04 = colors.on_surface_variant;
+                base05 = colors.on_surface;
                 base06 = colors.secondary_fixed;
                 base07 = colors.on_primary_container;
                 base08 = colors.error;
@@ -167,8 +167,8 @@ in
                 base01 = colors.surface_container;
                 base02 = colors.surface_container_highest;
                 base03 = colors.outline;
-                base04 = colors.on_surface;
-                base05 = colors.on_surface_variant;
+                base04 = colors.on_surface_variant;
+                base05 = colors.on_surface;
                 base06 = colors.on_secondary_fixed;
                 base07 = colors.on_primary_container;
                 base08 = colors.error;
