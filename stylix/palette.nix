@@ -151,7 +151,7 @@ in
                 base04 = colors.on_surface;
                 base05 = colors.on_surface_variant;
                 base06 = colors.secondary_fixed;
-                base07 = colors.primary;
+                base07 = colors.on_primary_container;
                 base08 = colors.error;
                 base09 = colors.tertiary;
                 base0A = colors.secondary;
@@ -159,7 +159,7 @@ in
                 base0C = colors.primary_fixed;
                 base0D = colors.surface_tint;
                 base0E = colors.tertiary_fixed;
-                base0F = colors.inverse_surface;
+                base0F = colors.on_error_container;
               }
             else
               {
@@ -170,7 +170,7 @@ in
                 base04 = colors.on_surface;
                 base05 = colors.on_surface_variant;
                 base06 = colors.on_secondary_fixed;
-                base07 = colors.primary;
+                base07 = colors.on_primary_container;
                 base08 = colors.error;
                 base09 = colors.on_tertiary;
                 base0A = colors.on_secondary_container;
@@ -178,7 +178,7 @@ in
                 base0C = colors.on_primary_fixed;
                 base0D = colors.surface_tint;
                 base0E = colors.on_tertiary_fixed;
-                base0F = colors.inverse_surface;
+                base0F = colors.on_error_container;
               };
         }
         // {
