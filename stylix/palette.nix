@@ -150,7 +150,7 @@ in
                 base03 = colors.outline;
                 base04 = colors.on_surface;
                 base05 = colors.on_surface_variant;
-                base06 = colors.secondary_container;
+                base06 = colors.secondary_fixed;
                 base07 = colors.primary;
                 base08 = colors.error;
                 base09 = colors.tertiary;
@@ -172,7 +172,7 @@ in
                 base06 = colors.on_secondary_fixed;
                 base07 = colors.primary;
                 base08 = colors.error;
-                base09 = colors.tertiary;
+                base09 = colors.on_tertiary;
                 base0A = colors.on_secondary_container;
                 base0B = colors.on_secondary_fixed_variant;
                 base0C = colors.on_primary_fixed;
