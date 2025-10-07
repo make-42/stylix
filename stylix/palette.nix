@@ -147,7 +147,7 @@ in
                 base00 = colors.surface_container_lowest;
                 base01 = colors.surface_container;
                 base02 = colors.surface_container_highest;
-                base03 = colors.outline_variant;
+                base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
                 base06 = colors.secondary_fixed;
@@ -166,7 +166,7 @@ in
                 base00 = colors.surface_container_lowest;
                 base01 = colors.surface_container;
                 base02 = colors.surface_container_highest;
-                base03 = colors.outline_variant;
+                base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
                 base06 = colors.tertiary_container;
