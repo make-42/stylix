@@ -144,9 +144,9 @@ in
             in
             if cfg.colorGeneration.polarity == "dark" then
               {
-                base00 = colors.surface;
+                base00 = colors.surface_container_lowest;
                 base01 = colors.surface_container;
-                base02 = colors.primary_container;
+                base02 = colors.surface_container_highest;
                 base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
@@ -163,9 +163,9 @@ in
               }
             else
               {
-                base00 = colors.surface;
+                base00 = colors.surface_container_lowest;
                 base01 = colors.surface_container;
-                base02 = colors.primary_container;
+                base02 = colors.surface_container_highest;
                 base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
