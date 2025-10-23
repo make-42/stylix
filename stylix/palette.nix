@@ -144,9 +144,9 @@ in
             in
             if cfg.colorGeneration.polarity == "dark" then
               {
-                base00 = colors.surface_container_lowest;
+                base00 = colors.surface;
                 base01 = colors.surface_container;
-                base02 = colors.surface_container_highest;
+                base02 = colors.primary_container;
                 base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
@@ -157,15 +157,15 @@ in
                 base0A = colors.secondary;
                 base0B = colors.primary;
                 base0C = colors.primary_fixed;
-                base0D = colors.surface_tint;
+                base0D = colors.outline_variant;
                 base0E = colors.tertiary_fixed;
                 base0F = colors.on_error_container;
               }
             else
               {
-                base00 = colors.surface_container_lowest;
+                base00 = colors.surface;
                 base01 = colors.surface_container;
-                base02 = colors.surface_container_highest;
+                base02 = colors.primary_container;
                 base03 = colors.outline;
                 base04 = colors.on_surface_variant;
                 base05 = colors.on_surface;
@@ -176,7 +176,7 @@ in
                 base0A = colors.secondary;
                 base0B = colors.primary;
                 base0C = colors.primary_container;
-                base0D = colors.surface_tint;
+                base0D = colors.outline_variant;
                 base0E = colors.secondary_fixed_dim;
                 base0F = colors.inverse_surface;
               };
