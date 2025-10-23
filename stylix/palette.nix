@@ -157,7 +157,7 @@ in
                 base0A = colors.secondary;
                 base0B = colors.primary;
                 base0C = colors.primary_fixed;
-                base0D = colors.outline_variant;
+                base0D = colors.surface_tint;
                 base0E = colors.tertiary_fixed;
                 base0F = colors.on_error_container;
               }
@@ -176,7 +176,7 @@ in
                 base0A = colors.secondary;
                 base0B = colors.primary;
                 base0C = colors.primary_container;
-                base0D = colors.outline_variant;
+                base0D = colors.surface_tint;
                 base0E = colors.secondary_fixed_dim;
                 base0F = colors.inverse_surface;
               };
