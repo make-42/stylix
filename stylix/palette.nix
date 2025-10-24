@@ -163,7 +163,7 @@ in
               }
             else
               {
-                base00 = colors.surface_container_lowest;
+                base00 = colors.surface;
                 base01 = colors.surface_container;
                 base02 = colors.surface_container_highest;
                 base03 = colors.outline;
