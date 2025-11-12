@@ -109,26 +109,29 @@ in
         # and not anything indirect such as filling a template, otherwise
         # the output of the palette generator will not be protected from
         # garbage collection.
-        default =
-          pkgs.runCommand "palette.json"
-            {
-              nativeBuildInputs = [ pkgs.matugen ];
-              env = {
-                CONTRAST = toString cfg.colorGeneration.contrast;
-                IMAGE = cfg.image;
-                SCHEME = cfg.colorGeneration.scheme;
-              };
-            }
-            ''
-              matugen \
-                --contrast "$CONTRAST" \
-                --dry-run \
-                --json strip \
-                --type "$SCHEME" \
-                image \
-                "$IMAGE" \
-                >"$out"
-            '';
+        default = pkgs.runCommand "palette.no-path-ref.json" { } ''
+          sed -E 's/"image":[[:space:]]*"[^"]*",?//g' ${
+            pkgs.runCommand "palette.json" # Paths are removed from the JSON file so that the derivation stays pure.
+              {
+                nativeBuildInputs = [ pkgs.matugen ];
+                env = {
+                  CONTRAST = toString cfg.colorGeneration.contrast;
+                  IMAGE = cfg.image;
+                  SCHEME = cfg.colorGeneration.scheme;
+                };
+              }
+              ''
+                matugen \
+                  --contrast "$CONTRAST" \
+                  --dry-run \
+                  --json strip \
+                  --type "$SCHEME" \
+                  image \
+                  "$IMAGE" \
+                  >"$out"
+              ''
+          } > $out
+        '';
       };
 
       palette =
@@ -140,10 +143,7 @@ in
           default =
             let
               colors =
-                (lib.strings.fromJSON (
-                  lib.strings.replaceStrings [ "/" ] [ "" ] (builtins.readFile cfg.generated.json)
-                )).colors.${cfg.colorGeneration.polarity};
-              # Paths are removed from the JSON file so that the derivation stays pure by making them unreadable by removing the "/" from it.
+                (lib.importJSON cfg.generated.json).colors.${cfg.colorGeneration.polarity};
             in
             if cfg.colorGeneration.polarity == "dark" then
               {
