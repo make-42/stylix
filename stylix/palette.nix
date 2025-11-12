@@ -140,7 +140,10 @@ in
           default =
             let
               colors =
-                (lib.importJSON cfg.generated.json).colors.${cfg.colorGeneration.polarity};
+                (lib.strings.fromJSON (
+                  lib.strings.replaceStrings [ "/" ] [ "" ] (builtins.readFile cfg.generated.json)
+                )).colors.${cfg.colorGeneration.polarity};
+              # Paths are removed from the JSON file so that the derivation stays pure by making them unreadable by removing the "/" from it.
             in
             if cfg.colorGeneration.polarity == "dark" then
               {
