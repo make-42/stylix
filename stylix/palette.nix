@@ -142,46 +142,45 @@ in
           internal = true;
           default =
             let
-              colors =
-                (lib.importJSON cfg.generated.json).colors.${cfg.colorGeneration.polarity};
+              inherit (lib.importJSON cfg.generated.json) colors;
             in
             if cfg.colorGeneration.polarity == "dark" then
               {
-                base00 = colors.surface_container_lowest;
-                base01 = colors.surface_container;
-                base02 = colors.surface_container_highest;
-                base03 = colors.outline;
-                base04 = colors.on_surface_variant;
-                base05 = colors.on_surface;
-                base06 = colors.secondary_fixed;
-                base07 = colors.primary;
-                base08 = colors.error;
-                base09 = colors.tertiary;
-                base0A = colors.secondary;
-                base0B = colors.primary;
-                base0C = colors.primary_fixed;
-                base0D = colors.surface_tint;
-                base0E = colors.tertiary_fixed;
-                base0F = colors.on_error_container;
+                base00 = colors.surface_container_lowest.${cfg.colorGeneration.polarity};
+                base01 = colors.surface_container.${cfg.colorGeneration.polarity};
+                base02 = colors.surface_container_highest.${cfg.colorGeneration.polarity};
+                base03 = colors.outline.${cfg.colorGeneration.polarity};
+                base04 = colors.on_surface_variant.${cfg.colorGeneration.polarity};
+                base05 = colors.on_surface.${cfg.colorGeneration.polarity};
+                base06 = colors.secondary_fixed.${cfg.colorGeneration.polarity};
+                base07 = colors.primary.${cfg.colorGeneration.polarity};
+                base08 = colors.error.${cfg.colorGeneration.polarity};
+                base09 = colors.tertiary.${cfg.colorGeneration.polarity};
+                base0A = colors.secondary.${cfg.colorGeneration.polarity};
+                base0B = colors.primary.${cfg.colorGeneration.polarity};
+                base0C = colors.primary_fixed.${cfg.colorGeneration.polarity};
+                base0D = colors.surface_tint.${cfg.colorGeneration.polarity};
+                base0E = colors.tertiary_fixed.${cfg.colorGeneration.polarity};
+                base0F = colors.on_error_container.${cfg.colorGeneration.polarity};
               }
             else
               {
-                base00 = colors.surface;
-                base01 = colors.surface_container;
-                base02 = colors.surface_container_highest;
-                base03 = colors.outline;
-                base04 = colors.on_surface_variant;
-                base05 = colors.on_surface;
-                base06 = colors.tertiary_container;
-                base07 = colors.on_primary_fixed_variant;
-                base08 = colors.error;
-                base09 = colors.tertiary;
-                base0A = colors.secondary;
-                base0B = colors.primary;
-                base0C = colors.primary_container;
-                base0D = colors.surface_tint;
-                base0E = colors.secondary_fixed_dim;
-                base0F = colors.inverse_surface;
+                base00 = colors.surface.${cfg.colorGeneration.polarity};
+                base01 = colors.surface_container.${cfg.colorGeneration.polarity};
+                base02 = colors.surface_container_highest.${cfg.colorGeneration.polarity};
+                base03 = colors.outline.${cfg.colorGeneration.polarity};
+                base04 = colors.on_surface_variant.${cfg.colorGeneration.polarity};
+                base05 = colors.on_surface.${cfg.colorGeneration.polarity};
+                base06 = colors.tertiary_container.${cfg.colorGeneration.polarity};
+                base07 = colors.on_primary_fixed_variant.${cfg.colorGeneration.polarity};
+                base08 = colors.error.${cfg.colorGeneration.polarity};
+                base09 = colors.tertiary.${cfg.colorGeneration.polarity};
+                base0A = colors.secondary.${cfg.colorGeneration.polarity};
+                base0B = colors.primary.${cfg.colorGeneration.polarity};
+                base0C = colors.primary_container.${cfg.colorGeneration.polarity};
+                base0D = colors.surface_tint.${cfg.colorGeneration.polarity};
+                base0E = colors.secondary_fixed_dim.${cfg.colorGeneration.polarity};
+                base0F = colors.inverse_surface.${cfg.colorGeneration.polarity};
               };
         }
         // {
