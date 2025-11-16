@@ -27,6 +27,7 @@ in
           "neutral"
           "rainbow"
           "tonal-spot"
+          "vibrant"
         ];
         default = "content";
         description = ''
